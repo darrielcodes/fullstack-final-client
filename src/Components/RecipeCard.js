@@ -1,11 +1,11 @@
 
 
 const RecipeCard = (props) => {
-
+    const { recipe } = props;
     
     return (
         <div>
-            <h2>Title: {props.recipes.name}</h2>
+            <h2>All ingredients: {recipe.name}</h2>
         </div>
     )
 };

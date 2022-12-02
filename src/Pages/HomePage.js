@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../Hooks/auth";
-import RecipeSearch from "../Components/RecipeSearch"
-import { Link } from "react-router-dom";
-import RecipePage from "../Pages/RecipePage"
+import { Link, useNavigate } from "react-router-dom";
 const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
 
 const HomePage = ((props) => {
     const [message, setMessage] = useState("");
     const auth = useAuth();
-    const setUserInput = props.setUserInput
+    const { setUserInput } = props;
+    const navigate = useNavigate()
 
     useEffect(() => {
        const fetchMessage = async () => {
@@ -34,9 +33,12 @@ const HomePage = ((props) => {
         <div>
             <h1>Home Page</h1>
             <h3>{message}</h3>
-            <RecipeSearch />
+            <label>Search Recipe Name: </label>
+            <input type="text" onChange={(e) => {
+                setUserInput(e.target.value)
+            }}></input>
             <button onClick={(e) => {
-                props.setUserInput(e.target.value)
+                navigate("/recipes")
             }}>Search</button>
         </div>
     )

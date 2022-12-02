@@ -10,6 +10,7 @@ const NavBar = (() => {
             <Link to="/registration">Register </Link>
             <Link to="/login">Login </Link>
             <Link to="/recipes">Recipes </Link>
+            <Link to="/cart">Cart </Link>
             <button onClick={() => {
                 auth.logout()
             }}>Logout</button>
