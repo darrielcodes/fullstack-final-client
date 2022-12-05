@@ -66,6 +66,9 @@ const RecipeCard = (props) => {
       setDisplayed(!displayed)
   };
 
+  const selectRecipe = (recipe) => {
+    setIndRecipe(recipe)
+  };
     return (
         <div>
             <h1>{userInput} recipes</h1>
@@ -78,10 +81,9 @@ const RecipeCard = (props) => {
             }}>Search</button>
             <br/>
              {recipe.map((newRecipe, index) => {
-                console.log(newRecipe)
+                //console.log(newRecipe)
                 const indRecipe = newRecipe.recipe
-                setIndRecipe(indRecipe)
-                 console.log(slicedURI(indRecipe.uri))
+                 console.log(individualRecipe)
                 return (
                     <div>
                         <h2>{indRecipe.label}</h2>
@@ -92,6 +94,7 @@ const RecipeCard = (props) => {
                            // console.log(indRecipe)
                         }}>Show Ingredients</button>
                         <button onClick={(e) => {
+                        selectRecipe(indRecipe);
                         navigate(`/cart/${slicedURI(indRecipe.uri)}`)
                         }}>Shop for items</button>
                         {indRecipe.ingredientLines.map((line, index) => {

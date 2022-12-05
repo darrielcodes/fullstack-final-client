@@ -6,7 +6,9 @@ import LoginPage from './Pages/LoginPage';
 import RegistrationPage from './Pages/RegistrationPage';
 import RecipePage from './Pages/RecipePage';
 import { useState } from 'react';
-import UserCart from './Components/UserCart';
+import IndRecipePage from './Pages/IndRecipePage';
+
+const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
 
 function App() {
   const [recipe, setRecipe] = useState([]);
@@ -35,7 +37,7 @@ function App() {
           path: "/recipes"
         },
         {
-          element: <UserCart recipe={recipe} individualRecipe={individualRecipe} setIndRecipe={setIndRecipe}/>,
+          element: <IndRecipePage recipe={recipe} individualRecipe={individualRecipe} setIndRecipe={setIndRecipe} urlEndpoint={urlEndpoint}/>,
           path: "/cart/:recipeID"
         }
       ]
