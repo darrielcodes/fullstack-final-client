@@ -12,12 +12,9 @@ const IndRecipePage = (props) => {
     const navigate = useNavigate()
     const recipeIDParam = params.recipeID;
     const [checked, setChecked] = useState([]); 
-    const [title, setTitle] = useState("");
-    const [quantity, setQuantity] = useState("");
     const [price, setPrice] = useState(0);
     const [errorSucess, setErrorSuccess] = useState("");
     const [errorMessage, setErrorMessage] = useState("")
-    let currentPrice = 0;
     
     
     useEffect(() => {
@@ -59,10 +56,6 @@ const IndRecipePage = (props) => {
                 itemPrice: 0}])
     };
 
-    // const mappedPrices = cart.map((item, index) => {
-    //         return item.itemPrice
-    //     })
-    //     console.log(mappedPrices)
     const [isChecked, setIsChecked] = useState(false)
     
     useEffect(() => {
@@ -122,11 +115,6 @@ const IndRecipePage = (props) => {
         return total + ", " + item;
       })
     : "";
-
-    const randomPrice = () => {
-        const price = Math.random() * 10
-        return price.toFixed(2)
-    };
     
     return (
         <div>
