@@ -95,7 +95,7 @@ const RecipeCard = (props) => {
                         }}>Show Ingredients</button>
                         <button onClick={(e) => {
                         selectRecipe(indRecipe);
-                        navigate(`/cart/${slicedURI(indRecipe.uri)}`)
+                        navigate(`/recipe/${slicedURI(indRecipe.uri)}`)
                         }}>Shop for items</button>
                         {indRecipe.ingredientLines.map((line, index) => {
                             return (

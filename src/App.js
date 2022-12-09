@@ -7,6 +7,8 @@ import RegistrationPage from './Pages/RegistrationPage';
 import RecipePage from './Pages/RecipePage';
 import { useState } from 'react';
 import IndRecipePage from './Pages/IndRecipePage';
+import CheckoutPage from './Pages/CheckoutPage';
+
 
 const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
 
@@ -14,6 +16,10 @@ function App() {
   const [recipe, setRecipe] = useState([]);
   const [userInput, setUserInput] = useState("Winter");
   const [individualRecipe, setIndRecipe] = useState({});
+  const [cart, setCart] = useState([{
+    recipeName: individualRecipe.label,
+    itemPrice: 0
+}]);
  
   const router = createBrowserRouter([
     {
@@ -37,8 +43,12 @@ function App() {
           path: "/recipes"
         },
         {
-          element: <IndRecipePage recipe={recipe} individualRecipe={individualRecipe} setIndRecipe={setIndRecipe} urlEndpoint={urlEndpoint}/>,
-          path: "/cart/:recipeID"
+          element: <IndRecipePage recipe={recipe} individualRecipe={individualRecipe} setIndRecipe={setIndRecipe} urlEndpoint={urlEndpoint} cart={cart} setCart={setCart}/>,
+          path: "/recipe/:recipeID"
+        },
+        {
+          element: <CheckoutPage recipe={recipe} individualRecipe={individualRecipe} setIndRecipe={setIndRecipe} urlEndpoint={urlEndpoint} cart={cart} setCart={setCart}/>,
+          path: "/checkout"
         }
       ]
     }
