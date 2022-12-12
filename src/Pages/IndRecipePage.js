@@ -29,6 +29,8 @@ const IndRecipePage = (props) => {
             const allData = responseJSON
             console.log(allData.recipe)
             setIndRecipe(allData.recipe)
+            setCart([{recipeName: individualRecipe.label,
+                itemPrice: 0}])
         }
         fetchRecipes();
     }, [])
@@ -59,6 +61,7 @@ const IndRecipePage = (props) => {
     const [isChecked, setIsChecked] = useState(false)
     
     useEffect(() => {
+
         const mappedPrices = cart.map((item, index) => {
             return item.itemPrice
         })

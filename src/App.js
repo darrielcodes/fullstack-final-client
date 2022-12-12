@@ -16,10 +16,7 @@ function App() {
   const [recipe, setRecipe] = useState([]);
   const [userInput, setUserInput] = useState("Winter");
   const [individualRecipe, setIndRecipe] = useState({});
-  const [cart, setCart] = useState([{
-    recipeName: individualRecipe.label,
-    itemPrice: 0
-}]);
+  const [cart, setCart] = useState([{}]);
  
   const router = createBrowserRouter([
     {
