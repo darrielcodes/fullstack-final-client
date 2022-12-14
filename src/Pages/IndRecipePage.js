@@ -29,8 +29,7 @@ const IndRecipePage = (props) => {
             const allData = responseJSON
             console.log(allData.recipe)
             setIndRecipe(allData.recipe)
-            setCart([{recipeName: individualRecipe.label,
-                itemPrice: 0}])
+            setCart([{recipeName: individualRecipe.label}])
         }
         fetchRecipes();
     }, [])
@@ -54,8 +53,8 @@ const IndRecipePage = (props) => {
             };
             console.log(updatePayload)
             console.log(errorSucess)
-            setCart([{recipeName: individualRecipe.label,
-                itemPrice: 0}])
+            // setCart([{recipeName: individualRecipe.label,
+            //     itemPrice: 0}])
     };
 
     const [isChecked, setIsChecked] = useState(false)
@@ -63,22 +62,17 @@ const IndRecipePage = (props) => {
     useEffect(() => {
 
         const mappedPrices = cart.map((item, index) => {
-            return item.itemPrice
-        })
+            if (!item.itemPrice) {
+				return 0
+			}
+			return item.itemPrice
+        })  
         const result = mappedPrices.reduce((initialValue, currentValue) => {
-            let total = 0
+            let total = initialValue
+            total = initialValue + currentValue;
+            return total
             
-            if (isChecked) {
-            total = initialValue + currentValue
-            return total
-            } 
-           if (!isChecked) {
-               for (let i = 0; i < mappedPrices.length; i++){
-                   total += mappedPrices[i]
-               }
-            return total
-            }
-        });
+        }, 0);
         
         setPrice(result)
     },[cart])
@@ -124,6 +118,8 @@ const IndRecipePage = (props) => {
             <h1>{individualRecipe.label}</h1>
             <img src={individualRecipe.images.REGULAR.url}></img>
             <br/>
+            <h2>Current Cart: ${price}.00</h2>
+            <h4>{checkedItems}</h4>
             <h3>Ingredients:</h3>
             {individualRecipe.ingredients.map((indIngredients,index) => {
                 let title = indIngredients.food;
@@ -139,12 +135,12 @@ const IndRecipePage = (props) => {
                     </div>
                     )
                 })}
-                <br/>
-                <h4>Current Cart: ${price}.00</h4>
-                <h5>{checkedItems}</h5>
+                
                 <button onClick={(e) => {
                     if (window.confirm(`Are you sure you want to add to cart?`)){
                         handleAddToCart();
+                        setCart([]);
+                        navigate("/checkout")
                     }
                     else {
                         console.log("cancelled")

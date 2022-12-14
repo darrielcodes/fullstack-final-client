@@ -8,6 +8,7 @@ const CheckoutPage = (props) => {
     const [order, setOrder] = useState([]);
     const [item, setItem] = useState([]);
     const [price, setPrice] = useState(0);
+    const [checked, setChecked] = useState([]); 
     const [shouldRefetch, setShouldRefetch] = useState(false);
     const auth = useAuth();
     const navigate = useNavigate()
@@ -32,35 +33,28 @@ const CheckoutPage = (props) => {
         })
     
         const keys = Object.entries(arrCart)
-        //console.log(keys)
         const mappedKeys = keys.map((item,index) => {
-            console.log(item)
             return item
         });
         const mappedArr = mappedKeys.map((item, index) => {
-            console.log(item[1])
             return item[1]
         })
-        // const joinArray = mappedArr.flat()
-        // console.log(joinArray)
         const filteredArr = mappedArr.filter((item) => {
-            console.log(item)
             for (let i = 0; i < mappedArr.length; i++){
 
             }
             return item
         })
-        console.log("type")
-        console.log(typeof(filteredArr))
+        console.log(filteredArr)
         const joinArray = filteredArr.flat()
         console.log(joinArray)
 			setItems(joinArray)
        }
+       
        fetchItems()
     }, [shouldRefetch]
     );
-    console.log("items:")
-   // console.log(items) 
+   
 
     const handleCreateOrder = async () => {
         const response = await fetch(`${urlEndpoint}/users/create-order`, {
@@ -69,7 +63,7 @@ const CheckoutPage = (props) => {
                 "Content-Type": "application/json",
                 [process.env.REACT_APP_TOKEN_HEADER_KEY]: auth.userToken 
               },
-              body: JSON.stringify(order)
+              body: JSON.stringify(items)
             });
             const updatePayload = await response.json();
         setErrorSuccess(updatePayload.success)
@@ -79,73 +73,118 @@ const CheckoutPage = (props) => {
                 } else {
                 setErrorMessage(updatePayload.message)
             };
-            setOrder({})
     };
-
-    // const mappedItems = items.map((item, index) => {
-    //     console.log(item) 
-    // })
-    // const handleitems = () => {
-    //     for (let i = 0; i < items.length; i++){
-    //     let filteredItems = []
-    //    filteredItems = items[i]
-    //     console.log (filteredItems[i])
-    // return filteredItems
-    // }};
-
-//     useEffect(() => {
-//         // const handleitems = () => {
-//         //     for (let i = 0; i < filteredItems.length; i++){
-//         //    filteredItems = filteredItems[i]
-//         //     console.log (filteredItems[i])
-//         // return filteredItems
-//         // }};
-//         //handleitems();
-//         // const arrItems = items.map((item, index) => {
-//         //     console.log(item)
-//         // })
+    //let checkedItems = [...checked]
+const handleChecked = (e, price) => {
+        let checkedItems = [...checked]
+        if (e.target.checked){
+            checkedItems = [...checked, e.target.value]
+            setChecked(checkedItems)
+        }
+        if (!e.target.checked){
+            checkedItems.splice(checked.indexOf(e.target.value), 1);
+        }
+            console.log(checkedItems)
         
-// }, [items])
+        return checkedItems
+        //     if (window.confirm(`Are you sure you want to remove from cart?`)){
+        //     checkedItems.splice(checked.indexOf(e.target.value), 1);
+        //     const index = items.filter((value) => {
+        //         return value.itemTitle !== e.target.value
+        //     })
+        //     setChecked(checkedItems)
+        //     setItems(index)
+        // }
+        // else {
+        //     console.log("cancelled")
+        // }
+        // }
+    // setChecked(checkedItems)
+}
+
+// const handleRefresh = (items) => {
+//     setItems(items)
+// }
 
 useEffect(() => {
+    
     const mappedPrices = items.map((item, index) => {
-        console.log(item.itemPrice)
+        if (!item.itemPrice) {
+            return 0
+        }
         return item.itemPrice
-    });
-    // const result = mappedPrices.reduce((initialValue, currentValue) => {
-        let total = 0
-        
-            for (let i = 0; i < mappedPrices.length; i++){
-                total += mappedPrices[i]
-            }
-        console.log(mappedPrices)
+    })  
+    const result = mappedPrices.reduce((initialValue, currentValue) => {
+        let total = initialValue
+        total = initialValue + currentValue;
         return total
-        // })
-
-    setPrice(total)
-    },[price])
-
+        }, 0);
+        setPrice(result)
+    },[items]);
+    const [recipeName, setRecipeName] = useState("")
+    // const recipeNames = items.filter((item)=>item.hasOwnProperty("recipeName"))
+    //console.log(recipeNames[0].recipeName)
+    // recipeNames.map((item, index) => {
+    //     return item
+    // })
+    //console.log(recipeNames)
+const recipeIngredients = items.filter((item)=>item.hasOwnProperty("itemTitle"))
+const recipeDetails = items.filter((item)=>item.hasOwnProperty("userEmail"))[0]
     return (
         <div>
             <h1>Checkout Cart</h1>
         <h2>Total: ${price}.00</h2>
           {Object.keys(items).map((key, index) => {
-            const title = items[key].itemTitle
-            const price = items[key].itemPrice
-            const quantity = items[key].itemQuantity
+            const title = items[key].itemTitle;
+            const price = items[key].itemPrice;
+            const quantity = items[key].itemQuantity;
+            
+            const recipeNames = items.filter((item)=>item.hasOwnProperty("recipeName"))
+            if (title === undefined || price == undefined ) {
+                return <></>
+            };
             return (
                 <div key={index}>
-                    <h3>{items[key].recipeName && items[key].recipeName}</h3>
-                    
-                    <label>{title && title} - ${price && price}.00</label>
-                    <br/>
-                    
-                    <button type="checkbox" value={title} onClick={(e) => {
-
-                    }}>Remove Item</button>
+                    <h3>{recipeNames.recipeName}</h3>
+                    <label>{title} - ${price}.00</label>
+                    <input type="checkbox" value={title} onChange={(e) => {
+                        handleChecked(e, price);
+                    }}></input>
                 </div>
             )
         })}
+        <button onClick={(e) => {
+            setItems(items)
+        }}>Refresh All</button>
+
+        <button onClick={(e, price) => {
+            if (window.confirm(`Are you sure you want to remove from cart?`)){
+                const index = items.filter((value, index) => {
+                    for(let i = 0; i < checked.length; i++){
+                    //     console.log(value.itemTitle)
+                    //     return value.itemTitle.includes(checked[i])
+                    // }
+                    //console.log(value.itemTitle.includes(checked[index]))
+                    if (value.itemTitle !== checked[index]){
+                        return value.itemTitle
+                    }}
+                    return value.itemTitle
+                    //return !value.itemTitle.includes([checked])
+                })
+                setItems(index)
+                setChecked([]) //// return here!!!!
+            }
+            // handleChecked(e, price);
+        }}>Remove selected items</button>
+
+        <button onClick={(e) => {
+             if (window.confirm(`Confirm checkout`)){
+            handleCreateOrder(items);
+        }
+        else {
+            console.log("cancelled")
+        }
+        }}>Checkout</button>
         </div>
     )
 };
