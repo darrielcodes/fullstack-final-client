@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router";
 
 
@@ -12,28 +12,48 @@ const RecipeCard = (props) => {
     const [displayed, setDisplayed] = useState(false);
     // const [individualRecipe, setIndRecipe] = useState({});
     const navigate = useNavigate();
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(null);
+    const [nextPage, setNextPage] = useState(null);
+    const [previousPage, setPreviousPage] = useState(null);
+    const [query, setQuery] = useState(''); // userInput?
+    const [pagination, setPagination] = useState(0)
+    const [currentUrl, setCurrentUrl] = useState(`https://api.edamam.com/api/recipes/v2?type=public&q=${userInput}&app_id=42895daf&app_key=9bed4c3632880a266b7f8179179ddb1e`)
 
-    const userChecked = () => {
-        setChecked(!checked);
-        if (checked === true){
-            cart.push(checked.value)
-        }
-        return cart
-    };
+
+    const prevSearchIdRef = useRef();
+    useEffect(()=>{
+      prevSearchIdRef.current = userInput;
+    });
+    console.log(prevSearchIdRef)
+    const prevSearch = prevSearchIdRef.current
+    let currentPagination = pagination;
 
     useEffect(()=>{
 		const fetchRecipes = async () => {
-			const response = await fetch(`https://api.edamam.com/api/recipes/v2?type=public&q=${userInput}&app_id=42895daf&app_key=9bed4c3632880a266b7f8179179ddb1e`, {
+            if(prevSearch !== userInput){
+                currentPagination = 0;
+                setPagination(0);
+               };
+
+			const response = await fetch(currentUrl, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json", 
                   }
 			});
 			const responseJSON = await response.json();
-            const allData = responseJSON.hits
-           //console.log(allData)
+            //const allData = responseJSON.hits
+           console.log(responseJSON)
+          // setCount(responseJSON.count)
+           //setNextPage(responseJSON._links.next.href)
+           //setPreviousPage()
+
+            if (clicked === true) {
+                nextClick(responseJSON)
+            }
            const mappedData = () => {
-                allData.map((newRecipe, index) => {
+            responseJSON.hits.map((newRecipe, index) => {
                 //console.log(newRecipe.recipe.label)
                 // setTitle(newRecipe.recipe.label)
                 // setDescription(newRecipe.recipe.ingredients[0].text)
@@ -41,14 +61,29 @@ const RecipeCard = (props) => {
                 return newRecipe
             })
         };
-        
+            //setCurrentUrl(responseJSON._links.next.href)
             mappedData();
-			setRecipe(allData)
-		}
+			setRecipe(responseJSON.hits)
+        }
 		fetchRecipes()
-    }, [userInput]);
+    }, [userInput, pagination]);
 
-  //console.log(cart)
+    const prevClick = () => {
+        if(pagination === 0){
+          return;
+        }
+        setPagination(pagination-10);
+    }
+  
+    const [clicked, setClicked] = useState(false)
+    const nextClick = (responseJSON) => {
+        setClicked(true)
+        setCurrentUrl(responseJSON._links.next.href)
+        setPagination(pagination+10);
+
+    };
+
+  console.log(clicked)
 
   //console.log(recipe[0])
 
@@ -56,11 +91,6 @@ const RecipeCard = (props) => {
         const recipeID = uri.slice(51)
         return recipeID
     };
-
-  const randomPrice = () => {
-      const price = Math.random() * 10
-      return price.toFixed(2)
-  };
 
   const handleClick = (e) => {
       setDisplayed(!displayed)
@@ -83,7 +113,7 @@ const RecipeCard = (props) => {
              {recipe.map((newRecipe, index) => {
                 //console.log(newRecipe)
                 const indRecipe = newRecipe.recipe
-                 console.log(individualRecipe)
+                 //console.log(individualRecipe)
                 return (
                     <div>
                         <h2>{indRecipe.label}</h2>
@@ -104,22 +134,6 @@ const RecipeCard = (props) => {
                                 </div>
                             )
                         })}
-                        {/* {indRecipe.ingredients.map((indIngredients,index) => {
-                   // console.log(newRecipe)
-                    return (
-                    <div>
-                        <label>{indIngredients.food} - {indIngredients.text}</label>
-                        <input type="checkbox"></input>
-                        <label> ${randomPrice()}</label>
-                       {console.log(checked)}
-                    </div>
-                    )
-                })} */}
-                <br/>
-                {/* <button onClick={(e) => {
-                    navigate("/cart")
-                }}>Add to cart</button> */}
-
                 <br/>
                 <br/>
                         <label>Full recipe: </label>
@@ -128,6 +142,14 @@ const RecipeCard = (props) => {
                         </div>
                 )}
              )}
+             <br/>
+          <button onClick={prevClick}>Prev</button>
+          <button onClick={nextClick}>Next</button>
+                        {/* <label>Page:</label>
+                        <input type="number" value={page} onChange={(e) => {
+                            setPage(e.target.value)
+                        }}></input>
+                        <br/> */}
         </div>
     )
 };

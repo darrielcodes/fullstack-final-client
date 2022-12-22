@@ -8,6 +8,9 @@ import RecipePage from './Pages/RecipePage';
 import { useState } from 'react';
 import IndRecipePage from './Pages/IndRecipePage';
 import CheckoutPage from './Pages/CheckoutPage';
+import AccountPage from './Pages/AccountPage';
+import LandingPage from './Pages/LandingPage';
+import bg from "./img/bg2.jpg"
 
 
 const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
@@ -19,13 +22,23 @@ function App() {
   const [cart, setCart] = useState([]);
  
   const router = createBrowserRouter([
+    // {
+    //   path: "/",
+    //   element: <GlobalLayout />,
+    //   children: [
+    //     {
+    //       element: <LandingPage setUserInput={setUserInput}/>,
+    //       index: true
+    //     },
     {
       path: "/",
+      element: <LandingPage />
+    }, {
       element: <GlobalLayout />,
       children: [
         {
           element: <HomePage setUserInput={setUserInput}/>,
-          index: true
+          path: "/home"
         },
         {
           element: <LoginPage />,
@@ -46,12 +59,16 @@ function App() {
         {
           element: <CheckoutPage recipe={recipe} individualRecipe={individualRecipe} setIndRecipe={setIndRecipe} urlEndpoint={urlEndpoint} cart={cart} setCart={setCart}/>,
           path: "/checkout"
+        },
+        {
+          element: <AccountPage urlEndpoint={urlEndpoint}/>,
+          path: "/user-info"
         }
       ]
     }
   ])
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundImage: `url(${bg})`, height: "100%", opacity: "90%", backgroundPositionX: "20%", backgroundRepeat: "no-repeat", backgroundSize: "cover"}}>
     <RouterProvider router={router}/>
     </div>
   );

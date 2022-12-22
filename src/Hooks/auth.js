@@ -21,9 +21,9 @@ export const AuthProvider = ({ children }) => {
   }, [isAuthLoading]);
 
   // call this function when you want to register the user
-  const register = async (email, password) => {
+  const register = async (email, password, name, phone) => {
     setIsAuthLoading(true);
-    const registerResult = await registerUser(email, password);
+    const registerResult = await registerUser(email, password, name, phone);
     setIsAuthLoading(false);
     return registerResult;
   };
@@ -70,7 +70,7 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const registerUser = async (email, password) => {
+const registerUser = async (email, password, name, phone) => {
   const url = `${urlEndpoint}/users/register`;
   const response = await fetch(url, {
     method: "POST",
@@ -80,6 +80,8 @@ const registerUser = async (email, password) => {
     body: JSON.stringify({
       email,
       password,
+      name,
+      phone
     }),
   });
   const responseJSON = await response.json();

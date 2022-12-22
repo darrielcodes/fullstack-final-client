@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Hooks/auth";
-import UserCart from "../Components/UserCart";
+import UserCart from "../Components/OrderHistory";
 
 
 const IndRecipePage = (props) => {
@@ -107,28 +107,42 @@ const IndRecipePage = (props) => {
         setChecked(currentCart)
     };
 
+    const handleQuantity = (quantity) => {
+        let itemQuantity = quantity;
+         itemQuantity += 1;
+         setQuantitys(itemQuantity)
+        
+    }
     const checkedItems = checked.length
     ? checked.reduce((total, item) => {
         return total + ", " + item;
       })
     : "";
     
+    const [quantitys, setQuantitys] = useState(1)
     return (
-        <div>
-            <h1>{individualRecipe.label}</h1>
-            <img src={individualRecipe.images.REGULAR.url}></img>
+        <div className="indRecipe-layout">
+            <h1 >{individualRecipe.label}</h1>
+            <img src={individualRecipe.images.REGULAR.url} ></img>
             <br/>
             <h2>Current Cart: ${price}.00</h2>
             <h4>{checkedItems}</h4>
             <h3>Ingredients:</h3>
             {individualRecipe.ingredients.map((indIngredients,index) => {
                 let title = indIngredients.food;
-                let quantity = indIngredients.quantity.toString().slice(0,5);
+                let quantity = Number(indIngredients.quantity.toString().slice(0,5))
                 let indPrice = indIngredients.weight.toString().slice(0,1)
                 indPrice += ".00"
                     return (
-                    <div>
-                        <label>{quantity} {indIngredients.measure} {title} - ${indPrice}</label>
+                    <div >
+                        <label>{quantity} {title} - ${indPrice}</label>
+                        <label>Change Quantity </label>
+                        <input type="number" min={1} onClick={(e) => {
+                            //handleQuantity(quantitys)
+                            // quantity += quantity;
+                            // console.log(quantity)
+                        }}></input>
+                        <label>Select</label>
                         <input type="checkbox" value={title} onChange={(e) => {
                             handleChecked(e, individualRecipe.label, title, Number(quantity), Number(indPrice));
                         }}></input>

@@ -28,7 +28,7 @@ const LoginPage = (() => {
                 const registerResult = await auth.login(email,password);
                
                 if (registerResult.success) {
-                    navigate("/")
+                    navigate("/home")
                 }
                 if (!registerResult.success) {
                     setLoginMessage(registerResult.message)

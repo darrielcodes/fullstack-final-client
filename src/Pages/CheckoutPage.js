@@ -69,58 +69,32 @@ const CheckoutPage = (props) => {
         setErrorSuccess(updatePayload.success)
         setErrorMessage(updatePayload.message)
         if (updatePayload.success === true){
-                    navigate("/");
+                    navigate("/home");
                 } else {
                 setErrorMessage(updatePayload.message)
             };
     };
-    //let checkedItems = [...checked]
-const handleChecked = (e, price) => {
-        let checkedItems = [...checked]
-        if (e.target.checked){
-            checkedItems = [...checked, e.target.value]
-            setChecked(checkedItems)
-        }
-        if (!e.target.checked){
-            checkedItems.splice(checked.indexOf(e.target.value), 1);
-        }
-            console.log(checkedItems)
+
+    useEffect(() => {
         
-        return checkedItems
-        //     if (window.confirm(`Are you sure you want to remove from cart?`)){
-        //     checkedItems.splice(checked.indexOf(e.target.value), 1);
-        //     const index = items.filter((value) => {
-        //         return value.itemTitle !== e.target.value
-        //     })
-        //     setChecked(checkedItems)
-        //     setItems(index)
-        // }
-        // else {
-        //     console.log("cancelled")
-        // }
-        // }
-    // setChecked(checkedItems)
-}
+        const mappedPrices = items.map((item, index) => {
+            if (!item.itemPrice) {
+                return 0
+            }
+            return item.itemPrice
+        })  
+        const result = mappedPrices.reduce((initialValue, currentValue) => {
+            let total = initialValue
+            total = initialValue + currentValue;
+            return total
+            }, 0);
+            setPrice(result)
+        },[items]);
 
-// const handleRefresh = (items) => {
-//     setItems(items)
-// }
+    const handleQuantity = () => {
 
-useEffect(() => {
-    
-    const mappedPrices = items.map((item, index) => {
-        if (!item.itemPrice) {
-            return 0
-        }
-        return item.itemPrice
-    })  
-    const result = mappedPrices.reduce((initialValue, currentValue) => {
-        let total = initialValue
-        total = initialValue + currentValue;
-        return total
-        }, 0);
-        setPrice(result)
-    },[items]);
+    };
+
     const [recipeName, setRecipeName] = useState("")
     // const recipeNames = items.filter((item)=>item.hasOwnProperty("recipeName"))
     //console.log(recipeNames[0].recipeName)
@@ -128,10 +102,12 @@ useEffect(() => {
     //     return item
     // })
     //console.log(recipeNames)
-const recipeIngredients = items.filter((item)=>item.hasOwnProperty("itemTitle"))
-const recipeDetails = items.filter((item)=>item.hasOwnProperty("userEmail"))[0]
+    const recipeIngredients = items.filter((item)=>item.hasOwnProperty("itemTitle"))
+    const recipeDetails = items.filter((item)=>item.hasOwnProperty("userEmail"))[0]
+
     return (
         <div>
+            <h1>{errorMessage}</h1>
             <h1>Checkout Cart</h1>
         <h2>Total: ${price}.00</h2>
           {Object.keys(items).map((key, index) => {
@@ -146,10 +122,16 @@ const recipeDetails = items.filter((item)=>item.hasOwnProperty("userEmail"))[0]
             return (
                 <div key={index}>
                     <h3>{recipeNames.recipeName}</h3>
-                    <label>{title} - ${price}.00</label>
-                    <input type="checkbox" value={title} onChange={(e) => {
-                        handleChecked(e, price);
-                    }}></input>
+                    <ul>
+                    <li>{title} - ${price}.00</li>
+                    <button value={title} onClick={(e) => {
+                        console.log(e.target.value)
+                        const index = items.filter((value) => {
+                                    return value.itemTitle !== e.target.value
+                                })
+                        setItems(index)
+                    }}>Remove</button>
+                    </ul>
                 </div>
             )
         })}
@@ -157,28 +139,12 @@ const recipeDetails = items.filter((item)=>item.hasOwnProperty("userEmail"))[0]
             setItems(items)
         }}>Refresh All</button>
 
-        <button onClick={(e, price) => {
-            if (window.confirm(`Are you sure you want to remove from cart?`)){
-                const index = items.filter((value, index) => {
-                    for(let i = 0; i < checked.length; i++){
-                    //     console.log(value.itemTitle)
-                    //     return value.itemTitle.includes(checked[i])
-                    // }
-                    //console.log(value.itemTitle.includes(checked[index]))
-                    if (value.itemTitle !== checked[index]){
-                        return value.itemTitle
-                    }}
-                    return value.itemTitle
-                    //return !value.itemTitle.includes([checked])
-                })
-                setItems(index)
-                setChecked([]) //// return here!!!!
-            }
-            // handleChecked(e, price);
-        }}>Remove selected items</button>
-
         <button onClick={(e) => {
-             if (window.confirm(`Confirm checkout`)){
+            if (price === 0){
+                setErrorMessage("Please add items with value to cart!")
+                return;
+            }
+             if (window.confirm(`Empty cart and confirm checkout?`)){
             handleCreateOrder(items);
         }
         else {
