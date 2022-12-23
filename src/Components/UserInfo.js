@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../Hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 const UserInfo = (props) => {
     const { recipe, urlEndpoint } = props;
@@ -10,6 +11,7 @@ const UserInfo = (props) => {
     const [password, setNewPassword] = useState("")
     const [name, setNewName] = useState("")
     const [phone, setNewPhone] = useState("")
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -27,34 +29,76 @@ const UserInfo = (props) => {
         }
         
         fetchItems()
-     }, [shouldRefetch]
+     }, [shouldRefetch, name, phone]
      );
 
+    const handleUpdateUserName = async () => {
+        setShouldRefetch(true);
+        const response = await fetch(`${urlEndpoint}/users/update-name/${user.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json", 
+              },
+              body: JSON.stringify({ 
+                        name: name
+                     }),
+            });
+        setShouldRefetch(false)
+    };
 
-    // console.log(user[0].email)
+    const handleUpdateUserPhone = async () => {
+        setShouldRefetch(true);
+        const response = await fetch(`${urlEndpoint}/users/update-phone/${user.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json", 
+              },
+              body: JSON.stringify({
+                  phone: phone
+                     }),
+            });
+        setShouldRefetch(false)
+    };
+
+    const handleDeleteUserProfile = async () => {
+        setShouldRefetch(true);
+        const response = await fetch(`${urlEndpoint}/users/delete-acct/${user.id}`, {
+            method: "DELETE"
+            });
+        setShouldRefetch(false)
+    }
+    console.log(user)
     return (
         <div>
-           <h2>{user.name} - Update User Info</h2>
-            <label> Update Email: {user.email}</label>
+           <h1>Update User Info</h1>
+            <label> Name: {user.name}</label>
             <br/>
-            <input  type="text"></input>
+            <input type="text" onChange={(e) => {
+                setNewName(e.target.value)
+            }}></input>
+            <button onClick={(e) => {
+                handleUpdateUserName();
+            }}>Update</button>
             <br/>
-            <button>Submit</button>
+            <label>Phone Number: {user.phone}</label>
             <br/>
-            <label> Update Name: {user.name}</label>
-            <br/>
-            <input  type="text"></input>
-            <br/>
-            <button>Submit</button>
-            <br/>
-            <label>Update Phone Number: {user.phone}</label>
-            <br/>
-            <input type="text"></input>
-            <br/>
-            <button>Submit</button>
+            <input type="text" onChange={(e) => {
+                setNewPhone(e.target.value)
+            }}></input>
+            <button onClick={(e) => {
+                handleUpdateUserPhone();
+            }}>Update</button>
             <br/>
             <br/>
-            <button>Delete Account</button>
+            <button onClick={(e) => {
+                 if (window.confirm(`Are you sure you want to permenently delete your account?`)){
+                        handleDeleteUserProfile();
+                        navigate("/")
+                    }
+                    else {
+                        console.log("cancelled")
+                    }
+            }}>Delete Account</button>
         </div>
     )
 };

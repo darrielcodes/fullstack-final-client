@@ -43,7 +43,7 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  opacity: 60%;
+  background: rgba(255, 255, 255, 0.5);
 };
 
 .allRecipes-layout{
@@ -56,18 +56,16 @@
 
 .indRecipe-layout{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
-  justify-content: space-around;
-  color: red;
+  height: 100%;
+  overflow-y: auto;
+  justify-content: center;
 }
 
-.indRecipeImg{
+.checkout-layout{
   display: flex;
-}
-
-.indRecipe-flex{
-  display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  width: 100%;
   justify-content: space-between;
 }

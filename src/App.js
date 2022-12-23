@@ -68,7 +68,7 @@ function App() {
     }
   ])
   return (
-    <div className="App" style={{ backgroundImage: `url(${bg})`, height: "100%", opacity: "90%", backgroundPositionX: "20%", backgroundRepeat: "no-repeat", backgroundSize: "cover"}}>
+    <div className="App" style={{ backgroundImage: `url(${bg})`, height: "100vh", width:"100%", opacity: "90%", backgroundRepeat: "no-repeat",overflow: "scroll", backgroundSize: "cover"}}>
     <RouterProvider router={router}/>
     </div>
   );

@@ -57,22 +57,22 @@ const OrderHistory = (props) => {
             return item[0]
         })
         
-         console.log(idExists)
+         console.log(recipeDate)
         // const mappedOrders = orderItem.map((item, index) => {
         //     return item
         // })
-        setOrderData(recipeDate);
+        setOrderData(recipeDate[0].createdAt);
         setOrderItem(idExists);
-        setOrderName(recipeName)
+        setOrderName(recipeName[0].recipeName)
          console.log(recipeDate)
        //setUser(foundUser[0].orderHistory)
         }
         fetchItems()
      }, [id]
      );
-
+console.log(orderItem)
     return (
-        <div>
+        <div style={{ background: "rgba(255, 255, 255, 0.5)", width: "50%", alignContent: "center", marginLeft: "300px"}}>
             <h1>Order History</h1>
             <select onChange={(e) => {
                 setId(e.target.value)
@@ -84,30 +84,29 @@ const OrderHistory = (props) => {
                         )
                 })}
                 </select>
-                {/* <h3>Title: {orderName[0].recipeName}</h3> */}
+                <h3>{orderName}</h3>
                 {orderItem.map((item, index) => {
-                    const title = item.itemTitle;
-                    const price = item.itemPrice;
-                    const quantity = item.itemQuantity;
-                    console.log(item)
                     return item.map((x, index) => {
                         const title = x.itemTitle;
                         const price = x.itemPrice;
                         const quantity = x.itemQuantity;
+                        console.log()
                         if (title === undefined || price == undefined ) {
                             return <></>
                         };
                         //console.log(title)
                         return (
                             <div>
-                                <h3>{title}</h3>
-                                <h4>${price}.00</h4>
+                                <ul style={{ listStyle: "none" }}>
+                                <li>{title}</li>
+                                <li>${price}.00</li>
+                                </ul>
                             </div>
                         )
                     })
                 })}
 
-                {/* <p>Created At: {orderData && orderData[0].createdAt}</p> */}
+                <h4>Created At: {orderData}</h4>
         </div>
     )
 };

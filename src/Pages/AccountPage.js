@@ -7,7 +7,7 @@ const { urlEndpoint } = props;
 
     return (
         <div>
-            <h1>Account Page</h1>
+            <h2>My Account</h2>
             <UserInfo urlEndpoint={urlEndpoint}/>
             <OrderHistory urlEndpoint={urlEndpoint}/>
         </div>

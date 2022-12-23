@@ -115,7 +115,7 @@ const RecipeCard = (props) => {
                 const indRecipe = newRecipe.recipe
                  //console.log(individualRecipe)
                 return (
-                    <div>
+                    <div style={{ background: "rgba(255, 255, 255, 0.5)", width: "75%", alignContent: "center", marginLeft: "150px"}}>
                         <h2>{indRecipe.label}</h2>
                         <img src={indRecipe.images.THUMBNAIL.url}></img>
                         <br/>

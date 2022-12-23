@@ -106,10 +106,11 @@ const CheckoutPage = (props) => {
     const recipeDetails = items.filter((item)=>item.hasOwnProperty("userEmail"))[0]
 
     return (
-        <div>
+        <div className="checkout-layout">
             <h1>{errorMessage}</h1>
-            <h1>Checkout Cart</h1>
-        <h2>Total: ${price}.00</h2>
+            <h1>Checkout</h1>
+        <h2 style={{color: "red"}}>Total: ${price}.00</h2>
+        <h1>Cart Items:</h1>
           {Object.keys(items).map((key, index) => {
             const title = items[key].itemTitle;
             const price = items[key].itemPrice;
@@ -122,7 +123,7 @@ const CheckoutPage = (props) => {
             return (
                 <div key={index}>
                     <h3>{recipeNames.recipeName}</h3>
-                    <ul>
+                    <ul style={{ listStyle: "none" }}>
                     <li>{title} - ${price}.00</li>
                     <button value={title} onClick={(e) => {
                         console.log(e.target.value)
@@ -135,9 +136,9 @@ const CheckoutPage = (props) => {
                 </div>
             )
         })}
-        <button onClick={(e) => {
+        {/* <button onClick={(e) => {
             setItems(items)
-        }}>Refresh All</button>
+        }}>Refresh</button> */}
 
         <button onClick={(e) => {
             if (price === 0){
@@ -150,7 +151,7 @@ const CheckoutPage = (props) => {
         else {
             console.log("cancelled")
         }
-        }}>Checkout</button>
+        }} style={{height: "50px"}}>Checkout</button>
         </div>
     )
 };

@@ -121,12 +121,12 @@ const IndRecipePage = (props) => {
     
     const [quantitys, setQuantitys] = useState(1)
     return (
-        <div className="indRecipe-layout">
-            <h1 >{individualRecipe.label}</h1>
-            <img src={individualRecipe.images.REGULAR.url} ></img>
+        <div>
+            <h1 style={{ background: "rgba(255, 255, 255, 0.8)", width: "50%", alignContent: "center", marginLeft: "300px"}}>{individualRecipe.label}</h1>
+            <img src={individualRecipe.images.REGULAR.url} style={{border: "solid black 3px"}}></img>
             <br/>
-            <h2>Current Cart: ${price}.00</h2>
-            <h4>{checkedItems}</h4>
+            <h2 style={{color: "red"}}>Current Cart: ${price}.00</h2>
+            <h4 style={{ backgroundColor: "white"}}>{checkedItems}</h4>
             <h3>Ingredients:</h3>
             {individualRecipe.ingredients.map((indIngredients,index) => {
                 let title = indIngredients.food;
@@ -134,15 +134,15 @@ const IndRecipePage = (props) => {
                 let indPrice = indIngredients.weight.toString().slice(0,1)
                 indPrice += ".00"
                     return (
-                    <div >
-                        <label>{quantity} {title} - ${indPrice}</label>
-                        <label>Change Quantity </label>
+                    <div className="indRecipe-layout" style={{ background: "rgba(255, 255, 255, 0.5)", width: "50%", alignContent: "center", marginLeft: "300px"}}>
+                        <label>{title}</label>
+                    <p>${indPrice}</p>
+                        {/* <label>Change Quantity </label>
                         <input type="number" min={1} onClick={(e) => {
                             //handleQuantity(quantitys)
                             // quantity += quantity;
                             // console.log(quantity)
-                        }}></input>
-                        <label>Select</label>
+                        }}></input> */}
                         <input type="checkbox" value={title} onChange={(e) => {
                             handleChecked(e, individualRecipe.label, title, Number(quantity), Number(indPrice));
                         }}></input>
