@@ -13,7 +13,7 @@ const RegistrationPage = (() => {
 
     return (
         <div>
-            <h1>Registration Page</h1>
+            <h1 style={{ fontFamily: "copperplate", background: "rgba(255, 255, 255, 0.5)"}}>Register:</h1>
             <br/>
             <label>Email: </label>
             <input type="text" value={email} onChange={(e) => {

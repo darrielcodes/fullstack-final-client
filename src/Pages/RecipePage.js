@@ -54,7 +54,7 @@ const RecipeCard = (props) => {
             }
            const mappedData = () => {
             responseJSON.hits.map((newRecipe, index) => {
-                //console.log(newRecipe.recipe.label)
+                console.log(responseJSON)
                 // setTitle(newRecipe.recipe.label)
                 // setDescription(newRecipe.recipe.ingredients[0].text)
                 //console.log(newRecipe)
@@ -64,6 +64,7 @@ const RecipeCard = (props) => {
             //setCurrentUrl(responseJSON._links.next.href)
             mappedData();
 			setRecipe(responseJSON.hits)
+            setNextPage(responseJSON._links.next.href)
         }
 		fetchRecipes()
     }, [userInput, pagination]);
@@ -76,10 +77,11 @@ const RecipeCard = (props) => {
     }
   
     const [clicked, setClicked] = useState(false)
-    const nextClick = (responseJSON) => {
+    const nextClick = () => {
+        console.log(nextPage)
+        
         setClicked(true)
-        setCurrentUrl(responseJSON._links.next.href)
-        setPagination(pagination+10);
+        //setCurrentUrl(responseJSON._links.next.href)
 
     };
 
